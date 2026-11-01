@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: hydrosense
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true          # Render creates a strong random secret for you
+      - key: AUTHORITY_EMAIL_DOMAIN
+        value: krct.ac.in
+      - key: AUTHORITY_INVITE_CODE
+        sync: false                  # you type this in the Render dashboard (any private phrase)
+      - key: REPORT_CODE_PREFIX
+        value: TRI
+      - key: PUBLIC_BASE_URL
+        sync: false                  # e.g. https://hydrosense.onrender.com
+      - key: GEMINI_API_KEY
+        sync: false                  # FREE AI photo check: key from https://aistudio.google.com/apikey
+      - key: ANTHROPIC_API_KEY
+        sync: false                  # paid alternative to Gemini (optional)
+      # Free plan storage is temporary (wiped on every redeploy/restart). To keep reports permanently,
+      # upgrade to a paid plan, add a disk mounted at /var/data, and uncomment these two lines:
+      # - key: DB_PATH
+      #   value: /var/data/hydrosense.db
+      # - key: UPLOAD_DIR
+      #   value: /var/data/uploads
