@@ -287,6 +287,34 @@ router.get('/nearby', (req, res) => {
   res.json({ nearby });
 });
 
+// ---------- COMMUNITY LIST (public): open reports that neighbours can back with "I See This Too" ----------
+// No reporter identity is ever returned. Guests see the counts; signed-in citizens can confirm.
+router.get('/community', authOptional, (req, res) => {
+  const uid = req.user ? req.user.id : -1;
+  const rows = db.prepare(`
+    SELECT r.id, r.report_code, r.status, r.priority, r.water_body_type, r.observed_issues, r.created_at, r.citizen_id,
+           wb.name as water_body_name,
+           (SELECT COUNT(*) FROM confirmations c WHERE c.report_id = r.id) as confirm_count,
+           EXISTS(SELECT 1 FROM confirmations c WHERE c.report_id = r.id AND c.user_id = ?) as i_confirmed
+    FROM reports r LEFT JOIN water_bodies wb ON wb.id = r.water_body_id
+    WHERE r.status NOT IN ('resolved', 'rejected')
+    ORDER BY r.created_at DESC LIMIT 100
+  `).all(uid);
+  const isCitizen = !!req.user && req.user.role === 'citizen';
+  res.json({
+    viewer: req.user ? req.user.role : 'guest',
+    reports: rows.map((r) => {
+      let issues = []; try { issues = JSON.parse(r.observed_issues || '[]'); } catch (e) { /* ignore */ }
+      return {
+        id: r.id, report_code: r.report_code, status: r.status, priority: r.priority,
+        water_body_type: r.water_body_type, water_body_name: r.water_body_name, issues,
+        created_at: r.created_at, confirm_count: r.confirm_count,
+        i_confirmed: !!r.i_confirmed, is_mine: isCitizen && r.citizen_id === uid,
+      };
+    }),
+  });
+});
+
 // ---------- ALERTS (authority): open high/critical priority reports ----------
 router.get('/alerts', authRequired, requireRole('authority'), (req, res) => {
   const rows = db.prepare(`
@@ -356,7 +384,7 @@ router.get('/:id', authRequired, (req, res) => {
 });
 
 // ---------- "I SEE THIS TOO" ----------
-router.post('/:id/confirm', authRequired, confirmLimiter, (req, res) => {
+router.post('/:id/confirm', authRequired, requireRole('citizen'), confirmLimiter, (req, res) => {
   const report = db.prepare('SELECT id, citizen_id FROM reports WHERE id = ?').get(req.params.id);
   if (!report) return res.status(404).json({ error: 'Report not found.' });
   if (report.citizen_id === req.user.id) {
