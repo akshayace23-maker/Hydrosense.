@@ -241,7 +241,7 @@
   // ------------------------------------------------------------------ shared header / footer
   const LOGO = `<svg class="nav__logo" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="hsg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5eead4"/><stop offset="1" stop-color="#0ea5e9"/></linearGradient></defs><path d="M16 2.5C16 2.5 5.5 14 5.5 20.2a10.5 10.5 0 0 0 21 0C26.5 14 16 2.5 16 2.5Z" fill="url(#hsg)"/><path d="M10.5 20.5c1.6-1.5 3.2-1.5 4.8 0s3.2 1.5 4.8 0 2.4-1 3-.6" fill="none" stroke="#04201d" stroke-width="1.7" stroke-linecap="round" opacity=".7"/></svg>`;
   const NAV = [
-    ['/index.html', 'Home'], ['/report.html', 'Report Issue'], ['/track.html', 'Track'],
+    ['/index.html', 'Home'], ['/report.html', 'Report Issue'], ['/track.html', 'Track'], ['/community.html', 'Community'],
     ['/map.html', 'Map'], ['/water-bodies.html', 'Water Bodies'], ['/news.html', 'News'],
   ];
 
@@ -317,7 +317,7 @@
       <div class="footer__grid">
         <div><a href="/" class="nav__brand" style="margin-bottom:10px;" aria-label="HydroSense home">${LOGO}<span data-no-tr>HydroSense</span></a>
           <p>HydroSense — a citizen-powered water-body monitoring and environmental accountability platform.</p></div>
-        <div><h5>Explore</h5><a href="/map.html">GIS Map</a><a href="/water-bodies.html">Water Bodies</a><a href="/news.html">Water-Body News</a><a href="/track.html">Track a Report</a></div>
+        <div><h5>Explore</h5><a href="/map.html">GIS Map</a><a href="/water-bodies.html">Water Bodies</a><a href="/news.html">Water-Body News</a><a href="/track.html">Track a Report</a><a href="/community.html">Community Reports</a></div>
         <div><h5>About</h5><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a><a href="/report.html">Report a Water Issue</a></div>
       </div>
       <div class="footer__bottom"><span>© ${new Date().getFullYear()} HydroSense</span><span>AI assists. It never decides.</span></div>

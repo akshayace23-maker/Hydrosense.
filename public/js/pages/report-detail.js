@@ -72,6 +72,13 @@ function render() {
           <button class="btn btn-primary btn-block" id="confirmBtn" ${iConfirmed ? 'disabled' : ''}>${iConfirmed ? 'Already confirmed' : 'I see this too'}</button>
         </div>` : ''}
 
+        ${(isOwner || me.role === 'authority') ? `
+        <div class="card">
+          <h4>👀 I See This Too</h4>
+          <p>${confirmCount} citizen(s) have confirmed this issue.</p>
+          <p style="font-size:0.85rem;">${isOwner ? "This is your report, so you can't confirm it yourself — neighbours can confirm it from the Community page." : 'Confirmations come from citizens; many confirmations raise a report in priority.'}</p>
+        </div>` : ''}
+
         ${isOwner ? `
         <div class="card">
           <h4>Add follow-up photo</h4>
